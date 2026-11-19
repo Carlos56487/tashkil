@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<title>Quitar tashkīl</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 22px 16px; background: #fff; color: #202a28;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  main { max-width: 560px; margin: 0 auto; }
+  h1 { font-size: 21px; font-weight: 650; margin: 4px 0 20px; }
+  textarea {
+    display: block; width: 100%; min-height: 116px; resize: vertical;
+    border: 1px solid #cbd5d2; border-radius: 12px; padding: 15px;
+    font-size: 25px; line-height: 1.7; direction: rtl; text-align: right;
+    outline: none; color: #111; background: #fff;
+  }
+  textarea:focus { border-color: #159b80; box-shadow: 0 0 0 2px #159b8020; }
+  button {
+    border: 0; border-radius: 10px; padding: 13px 16px; min-height: 48px;
+    font-size: 16px; font-weight: 600; cursor: pointer;
+  }
+  .primary { width: 100%; margin: 12px 0 18px; background: #079b7e; color: white; }
+  .secondary { background: #edf3f1; color: #20332e; }
+  .row { display: flex; gap: 10px; margin-top: 10px; }
+  .row button { flex: 1; }
+  #result { background: #f7faf9; }
+  .label { font-size: 14px; color: #64736f; margin: 0 0 8px; }
+  #status { min-height: 22px; font-size: 13px; color: #64736f; margin-top: 8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Quitar diacríticos árabes</h1>
+  <p class="label">Escribe o pega una palabra</p>
+  <textarea id="source" lang="ar" dir="rtl" placeholder="اكتب هنا…" autofocus></textarea>
+  <button class="primary" id="clean">Eliminar diacríticos</button>
+  <p class="label">Resultado</p>
+  <textarea id="result" lang="ar" dir="rtl" readonly placeholder="النتيجة"></textarea>
+  <div class="row">
+    <button class="secondary" id="copy">Copiar</button>
+    <button class="secondary" id="clear">Borrar</button>
+  </div>
+  <div id="status" aria-live="polite"></div>
+</main>
+<script>
+  const source = document.getElementById('source');
+  const result = document.getElementById('result');
+  const status = document.getElementById('status');
+  function removeMarks(s) {
+    // Arabic harakat, tanwin, shadda, sukun and dagger alif.
+    return s.replace(/[\u0610-\u061A\u064B-\u065F\u0670]/g, '');
+  }
+  document.getElementById('clean').addEventListener('click', () => {
+    result.value = removeMarks(source.value);
+    status.textContent = 'Listo.';
+  });
+  document.getElementById('copy').addEventListener('click', async () => {
+    if (!result.value) { status.textContent = 'No hay resultado que copiar.'; return; }
+    try {
+      await navigator.clipboard.writeText(result.value);
+      status.textContent = 'Copiado.';
+    } catch {
+      result.focus(); result.select();
+      status.textContent = 'Selecciona el resultado y cópialo.';
+    }
+  });
+  document.getElementById('clear').addEventListener('click', () => {
+    source.value = ''; result.value = ''; status.textContent = '';
+    source.focus();
+  });
+  if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {})); }
+</script>
+</body>
+</html>

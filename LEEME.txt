@@ -1,0 +1,18 @@
+TASHKIL – aplicación web instalable
+
+Contenido del paquete:
+- index.html: herramienta
+- manifest.webmanifest: nombre, iconos y modo aplicación
+- sw.js: caché para uso sin conexión
+- icons/: iconos de la aplicación
+
+PUBLICACIÓN CON GITHUB PAGES
+1. Crea un repositorio público llamado tashkil.
+2. Sube TODO el contenido de esta carpeta a la raíz del repositorio (index.html debe quedar en la raíz).
+3. En Settings > Pages, selecciona Deploy from a branch, rama main y carpeta /(root), y guarda.
+4. Espera a que GitHub Pages publique el sitio.
+5. Abre la URL HTTPS que te proporciona GitHub en Chrome Android.
+6. En el menú ⋮, elige Instalar aplicación (o Añadir a pantalla de inicio).
+7. Abre Tashkīl una vez con conexión; después de cargar, la herramienta queda disponible sin conexión.
+
+El repositorio es público. No subas datos personales ni secretos.
